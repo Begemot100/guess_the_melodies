@@ -1,0 +1,95 @@
+import random
+import pygame
+import mutagen.flac
+
+
+# Initialize pygame
+pygame.init()
+
+# Define a list of songs
+songs = [
+    {'title': 'Rigid', 'filename': 'Rigid.flac'},
+    {'title': 'Blade Runner - Zadig Remix', 'filename': 'Blade Runner - Zadig Remix.mp3'},
+    {'title': 'DubMode - Vegim Remix', 'filename': 'DubMode - Vegim Remix.mp3'},
+    {'title': 'Son of a Gun - Original Mix', 'filename': 'Son of a Gun - Original Mix.mp3'},
+    {'title': 'Symbiosis', 'filename': 'Symbiosis.mp3'},
+    {'title': 'Chez nous Joachim Pastor Remix', 'filename': 'Chez nous Joachim Pastor Remix.flac'},
+    {'title': 'Joda  Worakls Remix', 'filename': 'Joda  Worakls Remix.flac'},
+    {'title': 'Oulan Bator  Oliver Koletzki Remix', 'filename': 'Oulan Bator  Oliver Koletzki Remix.flac'},
+    {'title': 'Petite Einmusik Remix', 'filename': 'Petite Einmusik Remix.flac'},
+    {'title': 'Taiga', 'filename': 'Taiga.flac'},
+    {'title': 'Toi  Boris Brejcha Remix', 'filename': 'Toi  Boris Brejcha Remix.flac'}
+]
+
+# Select a random song from the list
+selected_song = random.choice(songs)
+
+# Load the selected song
+pygame.mixer.music.load(selected_song['filename'])
+
+# Play the song
+pygame.mixer.music.play()
+
+# Convert the selected song name to lowercase
+selected_song_name = selected_song['title'].lower()
+
+# Replace spaces in the selected song name with underscores
+selected_song_name = selected_song_name.replace(' ', '_')
+
+# Create a list to store the letters of the selected song name
+song_letters = list(selected_song_name)
+
+# Create a list to store the correctly guessed letters of the selected song name
+guessed_letters = []
+
+# Loop through the letters of the selected song name and add an underscore for each letter
+for letter in song_letters:
+    if letter == '_':
+        guessed_letters.append('_')
+    else:
+        guessed_letters.append('*')
+
+# Print the current state of the guessed song name
+print(' '.join(guessed_letters))
+
+# Keep track of the number of incorrect guesses
+incorrect_guesses = 0
+
+# Keep looping until the player has correctly guessed the song name or has made too many incorrect guesses
+while True:
+# Get a letter guess from the player
+    guess = input('Guess a letter: ').lower()
+    
+    # If the letter has already been guessed, let the player know and continue to the next iteration
+    if guess in guessed_letters:
+        print('You already guessed that letter.')
+        continue
+       
+    # If the guessed letter is in the selected song name, update the guessed letters list
+    if guess in song_letters:
+        for i in range(len(song_letters)):
+            if song_letters[i] == guess:
+                guessed_letters[i] = guess
+    
+    # Print the current state of the guessed song name
+    print(' '.join(guessed_letters))
+    
+    # If the guessed song name matches the selected song name, the player wins!
+    if ''.join(guessed_letters) == selected_song_name:
+        print('Congratulations, you guessed the song name!')
+        break
+        
+    # Otherwise, increment the number of incorrect guesses
+    else:
+        incorrect_guesses += 1
+    
+    # If the player has made too many incorrect guesses, the game is over and the player loses
+    if incorrect_guesses == len(song_letters):
+        print('Sorry, you ran out of guesses. The song name was', selected_song['title'])
+        break
+        
+# Stop the song
+pygame.mixer.music.stop()
+
+# Quit pygame
+pygame.quit()
